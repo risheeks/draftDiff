@@ -2,6 +2,7 @@ package com.raze.draftDiff.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,7 +20,7 @@ public class Player {
             joinColumns = @JoinColumn(name = "player_id"),
             inverseJoinColumns = @JoinColumn(name = "champion_id")
     )
-    Set<Champion> champions;
+    List<Champion> champions;
 
     public String getId() {
         return id;
@@ -45,11 +46,11 @@ public class Player {
         this.ign = ign;
     }
 
-    public Set<Champion> getChampions() {
+    public List<Champion> getChampions() {
         return champions;
     }
 
-    public void setChampions(Set<Champion> champions) {
+    public void setChampions(List<Champion> champions) {
         this.champions = champions;
     }
 
