@@ -1,15 +1,15 @@
 package com.raze.draftDiff.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties("champions")
 public class Player {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     String id;
     String name;
     String ign;

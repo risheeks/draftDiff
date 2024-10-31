@@ -20,11 +20,7 @@ public class PlayerController {
     public Player initPlayer(@RequestParam String name, @RequestParam String ign) {
         Player player = playerService.createPlayer(name, ign);
         player.setChampions(championService.getChampionsForPlayer(player));
-        return player;
-    }
 
-    @GetMapping("/")
-    public String blank() {
-        return "Hello World!";
+        return playerService.save(player);
     }
 }

@@ -5,6 +5,7 @@ import com.raze.draftDiff.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,6 +20,14 @@ public class PlayerService {
         player.setName(name);
         player.setIgn(ign);
         return player;
+    }
+
+    public Optional<Player> findById(String id) {
+        return playerRepository.findById(id);
+    }
+
+    public Player save(Player player) {
+        return playerRepository.save(player);
     }
 
 }

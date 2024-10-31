@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 @Entity
 public class Champion {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     String id;
     String name;
     String img;

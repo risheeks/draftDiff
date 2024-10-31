@@ -6,6 +6,8 @@ import com.raze.draftDiff.model.Champion;
 import com.raze.draftDiff.model.Player;
 import com.raze.draftDiff.model.riot.RiotAccount;
 import com.raze.draftDiff.model.riot.RiotChampion;
+import com.raze.draftDiff.repository.ChampionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class ChampionService {
 
     @Value("${champion.minimumPoints}")
     Long minimumPoints;
+
+    @Autowired
+    ChampionRepository championRepository;
 
     public List<Champion> getChampionsForPlayer(Player player) {
         RestTemplate restTemplate = new RestTemplate();
@@ -78,29 +83,50 @@ public class ChampionService {
         }
         LinkedHashMap<String, Object> championsMap = (LinkedHashMap) (((LinkedHashMap) object).get("data"));
         for(RiotChampion riotChampion: riotChampions) {
-            if(riotChampion.getChampionPoints()>=minimumPoints)
-                champions.add(getChampionInfo(championsMap, riotChampion));
+            if(riotChampion.getChampionPoints()>=minimumPoints) {
+                Champion champion = getChampionInfo(championsMap, riotChampion).orElse(null);
+                if(champion!=null) champions.add(champion);
+            }
         }
-        System.out.println(champions.size());
         return champions;
     }
 
-    private Champion getChampionInfo(LinkedHashMap<String, Object> championsMap, RiotChampion riotChampion) {
+    private Optional<Champion> getChampionInfo(LinkedHashMap<String, Object> championsMap, RiotChampion riotChampion) {
         Set<String> championNames = championsMap.keySet();
         for(String name: championNames) {
             LinkedHashMap championInfo = ((LinkedHashMap)championsMap.get(name));
             if(championInfo.get("key").toString().equals(riotChampion.getChampionId().toString())) {
-                Champion champion = new Champion();
-                champion.setId(riotChampion.getChampionId().toString());
-                champion.setImg(championInfo.get("image").toString());
-                champion.setName(championInfo.get("name").toString());
-                return champion;
+//                Champion champion = new Champion();
+//                champion.setId(riotChampion.getChampionId().toString());
+//                champion.setImg(championInfo.get("image").toString());
+//                champion.setName(championInfo.get("name").toString());
+                return championRepository.findById(riotChampion.getChampionId().toString());
             }
         }
         try {
             throw new Exception("Champion not found!");
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void initChampions() {
+        ObjectMapper mapper = new ObjectMapper();
+        Object object = null;
+        try {
+            object = mapper.readValue(new File(("src/main/resources/champion.json")), Object.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        LinkedHashMap<String, Object> championsMap = (LinkedHashMap) (((LinkedHashMap) object).get("data"));
+        Set<String> championNames = championsMap.keySet();
+        for(String name: championNames) {
+            LinkedHashMap championInfo = ((LinkedHashMap)championsMap.get(name));
+            Champion champion = new Champion();
+            champion.setId(championInfo.get("key").toString());
+            champion.setImg(championInfo.get("image").toString());
+            champion.setName(championInfo.get("name").toString());
+            championRepository.save(champion);
         }
     }
 }
