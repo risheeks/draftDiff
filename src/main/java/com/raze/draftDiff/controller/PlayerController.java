@@ -23,4 +23,9 @@ public class PlayerController {
 
         return playerService.save(player);
     }
+
+    @GetMapping("/playerByIgn")
+    public Player findPlayerByIgn(@RequestParam String ign) {
+        return playerService.findByIgn(ign);
+    }
 }
