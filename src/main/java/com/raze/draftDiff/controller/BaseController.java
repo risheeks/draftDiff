@@ -4,11 +4,11 @@ import com.raze.draftDiff.model.Role;
 import com.raze.draftDiff.service.ChampionService;
 import com.raze.draftDiff.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class BaseController {
 

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/player")
 public class PlayerController {
@@ -40,7 +41,7 @@ public class PlayerController {
     @GetMapping("/initPlayer")
     public Player initPlayer(@RequestParam String name, @RequestParam String ign) {
         String puuid = playerService.getPUUIDByIgn(ign);
-        Player player = playerService.createPlayer(puuid, name, puuid);
+        Player player = playerService.createPlayer(puuid, name, ign);
         player.setChampions(championService.getChampionsForPlayer(player));
 
         return playerService.save(player);
