@@ -1,10 +1,11 @@
 package com.raze.draftDiff.controller;
 
+import com.raze.draftDiff.model.Champion;
 import com.raze.draftDiff.service.ChampionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/champion")
@@ -13,14 +14,13 @@ public class ChampionController {
     @Autowired
     ChampionService championService;
 
-    @PostMapping("/initChampions")
-    public String initChampions() {
-        try {
-            championService.initChampions();
-            return "Champion Initialization Success";
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Champion Initialization Failed";
-        }
+    @GetMapping("/")
+    public List<Champion> findAll() {
+        return championService.findAll();
     }
+    @GetMapping("/{championId}")
+    public Champion findById(@PathVariable("championId") String id) {
+        return championService.findById(id);
+    }
+
 }
