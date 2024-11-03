@@ -15,6 +15,10 @@ public class PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
 
+    public List<Player> findAll() {
+        return playerRepository.findAll();
+    }
+
     public Player createPlayer(String name, String ign) {
         Player player = new Player();
         player.setId(UUID.randomUUID().toString());

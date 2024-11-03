@@ -6,6 +6,8 @@ import com.raze.draftDiff.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/player")
 public class PlayerController {
@@ -15,6 +17,16 @@ public class PlayerController {
 
     @Autowired
     private ChampionService championService;
+
+    @GetMapping("/")
+    public List<Player> findAll() {
+        return playerService.findAll();
+    }
+
+    @GetMapping("/{playerId}")
+    public Player findById(@PathVariable("playerId") String id) {
+        return playerService.findById(id).orElse(null);
+    }
 
     @GetMapping("/initPlayer")
     public Player initPlayer(@RequestParam String name, @RequestParam String ign) {
