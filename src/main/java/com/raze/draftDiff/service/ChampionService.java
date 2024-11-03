@@ -31,25 +31,20 @@ public class ChampionService {
     @Autowired
     ChampionRepository championRepository;
 
+    public List<Champion> findAll() {
+        return championRepository.findAll();
+    }
+
+    public Champion findById(String id) {
+        return championRepository.findById(id).orElse(null);
+    }
     public List<Champion> getChampionsForPlayer(Player player) {
         RestTemplate restTemplate = new RestTemplate();
-        String[] nameSplit = player.getIgn().split("#");
-        URL url = null;
-        try {
-            url = new URL("https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + nameSplit[0] + "/" + nameSplit[1] + "?api_key=" + apiKey);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url.toString(), String.class);
         ObjectMapper mapper = new ObjectMapper();
-        RiotAccount riotAccount = null;
+        URL url = null;
+        ResponseEntity<String> responseEntity;
         try {
-            riotAccount = mapper.readValue(responseEntity.getBody(), RiotAccount.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            url = new URL("https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/" + riotAccount.getPuuid() + "?api_key=" + apiKey);
+            url = new URL("https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/" + player.getId() + "?api_key=" + apiKey);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -124,7 +119,7 @@ public class ChampionService {
             LinkedHashMap championInfo = ((LinkedHashMap)championsMap.get(name));
             Champion champion = new Champion();
             champion.setId(championInfo.get("key").toString());
-            champion.setImg(championInfo.get("image").toString());
+            champion.setImg(championInfo.get("id").toString().concat("_0.jpg"));
             champion.setName(championInfo.get("name").toString());
             championRepository.save(champion);
         }

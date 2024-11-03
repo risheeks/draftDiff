@@ -28,7 +28,6 @@ public class PointsController {
     @PostMapping("/assignPlayer")
     public void createPoints(@RequestBody PointsArray pointsArray) {
         for (Points points: pointsArray.getPoints()) {
-//            PlayerChampionRoleKey playerChampionRoleKey = new PlayerChampionRoleKey();
             pointsService.save(points);
         }
     }
