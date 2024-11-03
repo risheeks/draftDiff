@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     String id;
     String name;
 

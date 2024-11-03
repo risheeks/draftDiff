@@ -2,14 +2,14 @@ package com.raze.draftDiff.controller;
 
 import com.raze.draftDiff.model.Player;
 import com.raze.draftDiff.model.PlayerChampion;
+import com.raze.draftDiff.model.Points;
+import com.raze.draftDiff.model.key.PlayerChampionRoleKey;
 import com.raze.draftDiff.service.PlayerService;
 import com.raze.draftDiff.service.PointsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -23,5 +23,32 @@ public class PointsController {
     @GetMapping("/assignPlayer")
     public List<PlayerChampion> getPlayerChampionsPairsForPlayer(@RequestParam String playerId) {
         return pointsService.getPlayerChampionPairsForPlayer(playerService.findById(playerId).orElseThrow());
+    }
+
+    @PostMapping("/assignPlayer")
+    public void createPoints(@RequestBody PointsArray pointsArray) {
+        for (Points points: pointsArray.getPoints()) {
+//            PlayerChampionRoleKey playerChampionRoleKey = new PlayerChampionRoleKey();
+            pointsService.save(points);
+        }
+    }
+
+    public class PointsArray {
+        Points[] points;
+
+        public Points[] getPoints() {
+            return points;
+        }
+
+        public void setPoints(Points[] points) {
+            this.points = points;
+        }
+
+        @Override
+        public String toString() {
+            return "PointsArray{" +
+                    "points=" + Arrays.toString(points) +
+                    '}';
+        }
     }
 }
