@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@JsonIgnoreProperties("champions")
+//@JsonIgnoreProperties("champions")
 public class Player {
 
     @Id

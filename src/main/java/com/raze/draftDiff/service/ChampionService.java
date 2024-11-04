@@ -64,6 +64,7 @@ public class ChampionService {
             riotChampion.setChampionPoints(Long.parseLong(map.get("championPoints").toString()));
             riotChampions.add(riotChampion);
         }
+//        System.out.println(riotChampions);
         return getChampions(riotChampions);
     }
 
@@ -80,29 +81,17 @@ public class ChampionService {
         for(RiotChampion riotChampion: riotChampions) {
             if(riotChampion.getChampionPoints()>=minimumPoints) {
                 Champion champion = getChampionInfo(championsMap, riotChampion).orElse(null);
+//                System.out.println(riotChampion);
+//                System.out.println(champion);
                 if(champion!=null) champions.add(champion);
             }
         }
+//        System.out.println(champions);
         return champions;
     }
 
     private Optional<Champion> getChampionInfo(LinkedHashMap<String, Object> championsMap, RiotChampion riotChampion) {
-        Set<String> championNames = championsMap.keySet();
-        for(String name: championNames) {
-            LinkedHashMap championInfo = ((LinkedHashMap)championsMap.get(name));
-            if(championInfo.get("key").toString().equals(riotChampion.getChampionId().toString())) {
-//                Champion champion = new Champion();
-//                champion.setId(riotChampion.getChampionId().toString());
-//                champion.setImg(championInfo.get("image").toString());
-//                champion.setName(championInfo.get("name").toString());
-                return championRepository.findById(riotChampion.getChampionId().toString());
-            }
-        }
-        try {
-            throw new Exception("Champion not found!");
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        return championRepository.findById(riotChampion.getChampionId().toString());
     }
 
     public void initChampions() {
