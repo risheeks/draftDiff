@@ -23,7 +23,7 @@ public class PointsController {
     private PlayerService playerService;
     @GetMapping("/assignPlayer")
     public List<PlayerChampion> getPlayerChampionsPairsForPlayer(@RequestParam String playerId) {
-        return pointsService.getPlayerChampionPairsForPlayer(playerService.findById(playerId).orElseThrow());
+        return pointsService.getPlayerChampionPairsForPlayer(playerService.findById(playerId));
     }
 
     @PostMapping("/assignPlayer")

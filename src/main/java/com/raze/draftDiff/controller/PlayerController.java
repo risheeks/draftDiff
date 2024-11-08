@@ -35,7 +35,7 @@ public class PlayerController {
 
     @GetMapping("/{playerId}")
     public Player findById(@PathVariable("playerId") String id) {
-        return playerService.findById(id).orElse(null);
+        return playerService.findById(id);
     }
 
     @GetMapping("/initPlayer")
@@ -49,16 +49,22 @@ public class PlayerController {
 
     @GetMapping("/{playerId}/champion")
     public List<Champion> championsForPlayer(@PathVariable("playerId") String playerId) {
-        Optional<Player> optionalPlayer = playerService.findById(playerId);
-        return optionalPlayer.map(Player::getChampions).orElse(null);
+        Player player = playerService.findById(playerId);
+        return player.getChampions();
     }
 
     @PostMapping("/{playerId}/champions")
     public List<Points> assignPointsForPlayer(@PathVariable("playerId") String playerId, @RequestBody ChampionDataList championDataList) {
         System.out.println(championDataList);
         List<Points> pointsList = new ArrayList<>();
+        Player player = playerService.findById(playerId);
         for(ChampionDataList.ChampionData championData: championDataList.championData) {
             String championId = championData.getChampionId();
+            Champion champion = championService.findById(championId);
+            if(!player.getChampions().contains(champion)) {
+                player.getChampions().add(champion);
+                playerService.save(player);
+            }
             String img = championData.getImg();
             for(ChampionDataList.ChampionData.Data data: championData.getData()) {
                 Points points = new Points();

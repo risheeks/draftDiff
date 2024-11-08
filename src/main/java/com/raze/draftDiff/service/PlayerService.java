@@ -57,8 +57,8 @@ public class PlayerService {
         return riotAccount.getPuuid();
     }
 
-    public Optional<Player> findById(String id) {
-        return playerRepository.findById(id);
+    public Player findById(String id) {
+        return playerRepository.findById(id).orElse(null);
     }
 
     public Player findByIgn(String ign) {
