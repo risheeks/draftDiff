@@ -1,9 +1,7 @@
 package com.raze.draftDiff.service;
 
 import com.raze.draftDiff.model.*;
-import com.raze.draftDiff.model.key.PlayerChampionRoleKey;
 import com.raze.draftDiff.repository.PointsRepository;
-import com.raze.draftDiff.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +24,7 @@ public class PointsService {
     public List<PlayerChampion> getPlayerChampionPairsForPlayer(Player player) {
         List<PlayerChampion> pairs = new ArrayList<>();
         List<Role> roles = roleService.findAll();
-        for(Champion champion: player.getChampions()) {
+        for (Champion champion : player.getChampions()) {
             PlayerChampion pair = new PlayerChampion();
             pair.setChampion(champion);
             pair.setPlayer(player);

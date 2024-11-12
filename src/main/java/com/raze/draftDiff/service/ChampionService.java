@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raze.draftDiff.model.Champion;
 import com.raze.draftDiff.model.Player;
-import com.raze.draftDiff.model.riot.RiotAccount;
 import com.raze.draftDiff.model.riot.RiotChampion;
 import com.raze.draftDiff.repository.ChampionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +37,15 @@ public class ChampionService {
     public Champion findById(String id) {
         return championRepository.findById(id).orElse(null);
     }
+
     public List<Champion> getChampionsForPlayer(Player player) {
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
         URL url = null;
         ResponseEntity<String> responseEntity;
         try {
-            url = new URL("https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/" + player.getId() + "?api_key=" + apiKey);
+            url = new URL("https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/"
+                    + player.getId() + "?api_key=" + apiKey);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -56,7 +57,7 @@ public class ChampionService {
             throw new RuntimeException(e);
         }
         List<RiotChampion> riotChampions = new ArrayList<>();
-        for(Object championStr: championsStr) {
+        for (Object championStr : championsStr) {
             LinkedHashMap map = (LinkedHashMap) championStr;
             RiotChampion riotChampion = new RiotChampion();
             riotChampion.setChampionId(Integer.parseInt(map.get("championId").toString()));
@@ -64,7 +65,6 @@ public class ChampionService {
             riotChampion.setChampionPoints(Long.parseLong(map.get("championPoints").toString()));
             riotChampions.add(riotChampion);
         }
-//        System.out.println(riotChampions);
         return getChampions(riotChampions);
     }
 
@@ -78,15 +78,13 @@ public class ChampionService {
             throw new RuntimeException(e);
         }
         LinkedHashMap<String, Object> championsMap = (LinkedHashMap) (((LinkedHashMap) object).get("data"));
-        for(RiotChampion riotChampion: riotChampions) {
-            if(riotChampion.getChampionPoints()>=minimumPoints) {
+        for (RiotChampion riotChampion : riotChampions) {
+            if (riotChampion.getChampionPoints() >= minimumPoints) {
                 Champion champion = getChampionInfo(championsMap, riotChampion).orElse(null);
-//                System.out.println(riotChampion);
-//                System.out.println(champion);
-                if(champion!=null) champions.add(champion);
+                if (champion != null)
+                    champions.add(champion);
             }
         }
-//        System.out.println(champions);
         return champions;
     }
 
@@ -104,8 +102,8 @@ public class ChampionService {
         }
         LinkedHashMap<String, Object> championsMap = (LinkedHashMap) (((LinkedHashMap) object).get("data"));
         Set<String> championNames = championsMap.keySet();
-        for(String name: championNames) {
-            LinkedHashMap championInfo = ((LinkedHashMap)championsMap.get(name));
+        for (String name : championNames) {
+            LinkedHashMap championInfo = ((LinkedHashMap) championsMap.get(name));
             Champion champion = new Champion();
             champion.setId(championInfo.get("key").toString());
             champion.setImg(championInfo.get("id").toString().concat("_0.jpg"));

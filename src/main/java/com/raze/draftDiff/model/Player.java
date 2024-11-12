@@ -1,12 +1,11 @@
 package com.raze.draftDiff.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.List;
 
 @Entity
-//@JsonIgnoreProperties("champions")
+// @JsonIgnoreProperties("champions")
 public class Player {
 
     @Id
@@ -15,11 +14,7 @@ public class Player {
     String ign;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "player_champion",
-            joinColumns = @JoinColumn(name = "player_id"),
-            inverseJoinColumns = @JoinColumn(name = "champion_id")
-    )
+    @JoinTable(name = "player_champion", joinColumns = @JoinColumn(name = "player_id"), inverseJoinColumns = @JoinColumn(name = "champion_id"))
     List<Champion> champions;
 
     public String getId() {

@@ -14,8 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class PlayerService {
@@ -42,7 +40,8 @@ public class PlayerService {
         String[] nameSplit = ign.split("#");
         URL url = null;
         try {
-            url = new URL("https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + nameSplit[0] + "/" + nameSplit[1] + "?api_key=" + apiKey);
+            url = new URL("https://europe.api.riotgames.com/riot/account/v1/accounts/by-riot-id/" + nameSplit[0] + "/"
+                    + nameSplit[1] + "?api_key=" + apiKey);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -63,7 +62,8 @@ public class PlayerService {
 
     public Player findByIgn(String ign) {
         List<Player> playerList = playerRepository.findByIgn(ign);
-        if(!playerList.isEmpty()) return playerList.get(0);
+        if (!playerList.isEmpty())
+            return playerList.get(0);
         return null;
     }
 

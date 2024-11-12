@@ -1,9 +1,7 @@
 package com.raze.draftDiff.controller;
 
-import com.raze.draftDiff.model.Player;
 import com.raze.draftDiff.model.PlayerChampion;
 import com.raze.draftDiff.model.Points;
-import com.raze.draftDiff.model.key.PlayerChampionRoleKey;
 import com.raze.draftDiff.service.PlayerService;
 import com.raze.draftDiff.service.PointsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,7 @@ public class PointsController {
     private PointsService pointsService;
     @Autowired
     private PlayerService playerService;
+
     @GetMapping("/assignPlayer")
     public List<PlayerChampion> getPlayerChampionsPairsForPlayer(@RequestParam String playerId) {
         return pointsService.getPlayerChampionPairsForPlayer(playerService.findById(playerId));
@@ -28,7 +27,7 @@ public class PointsController {
 
     @PostMapping("/assignPlayer")
     public void createPoints(@RequestBody PointsArray pointsArray) {
-        for (Points points: pointsArray.getPoints()) {
+        for (Points points : pointsArray.getPoints()) {
             pointsService.save(points);
         }
     }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
@@ -54,19 +53,20 @@ public class PlayerController {
     }
 
     @PostMapping("/{playerId}/champions")
-    public List<Points> assignPointsForPlayer(@PathVariable("playerId") String playerId, @RequestBody ChampionDataList championDataList) {
+    public List<Points> assignPointsForPlayer(@PathVariable("playerId") String playerId,
+            @RequestBody ChampionDataList championDataList) {
         System.out.println(championDataList);
         List<Points> pointsList = new ArrayList<>();
         Player player = playerService.findById(playerId);
-        for(ChampionDataList.ChampionData championData: championDataList.championData) {
+        for (ChampionDataList.ChampionData championData : championDataList.championData) {
             String championId = championData.getChampionId();
             Champion champion = championService.findById(championId);
-            if(!player.getChampions().contains(champion)) {
+            if (!player.getChampions().contains(champion)) {
                 player.getChampions().add(champion);
                 playerService.save(player);
             }
             String img = championData.getImg();
-            for(ChampionDataList.ChampionData.Data data: championData.getData()) {
+            for (ChampionDataList.ChampionData.Data data : championData.getData()) {
                 Points points = new Points();
                 PlayerChampionRoleKey key = new PlayerChampionRoleKey();
                 key.setPlayerId(playerId);
@@ -82,11 +82,12 @@ public class PlayerController {
     }
 
     @PostMapping("/champion/{playerId}")
-    public List<Points> assignPointsForPlayer(@PathVariable("playerId") String playerId, @RequestBody ChampionDataList.ChampionData championData) {
+    public List<Points> assignPointsForPlayer(@PathVariable("playerId") String playerId,
+            @RequestBody ChampionDataList.ChampionData championData) {
         List<Points> pointsList = new ArrayList<>();
         String championId = championData.getChampionId();
         String img = championData.getImg();
-        for(ChampionDataList.ChampionData.Data data: championData.getData()) {
+        for (ChampionDataList.ChampionData.Data data : championData.getData()) {
             Points points = new Points();
             PlayerChampionRoleKey key = new PlayerChampionRoleKey();
             key.setPlayerId(playerId);
@@ -104,7 +105,6 @@ public class PlayerController {
     public Player findPlayerByIgn(@RequestParam String ign) {
         return playerService.findByIgn(ign);
     }
-
 
     public static class ChampionDataList {
         List<ChampionData> championData;
